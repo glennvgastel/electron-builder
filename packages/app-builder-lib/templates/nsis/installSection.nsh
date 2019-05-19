@@ -46,9 +46,14 @@ ${if} $isTryToKeepShortcuts == "true"
   ${endIf}
 ${endif}
 
-!insertmacro uninstallOldVersion SHELL_CONTEXT
-${if} $installMode == "all"
-  !insertmacro uninstallOldVersion HKEY_CURRENT_USER
+# Allows passing --uninstall-old-version=false to the installer to avoid uninstalling old versions
+${StdUtils.GetParameter} $allowUninstall "uninstall-old-version" "true"
+
+${if} $allowUninstall == "true"
+  !insertmacro uninstallOldVersion SHELL_CONTEXT
+  ${if} $installMode == "all"
+    !insertmacro uninstallOldVersion HKEY_CURRENT_USER
+  ${endIf}
 ${endIf}
 
 SetOutPath $INSTDIR
